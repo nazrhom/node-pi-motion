@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # Minimal Motion Detection Logic written by Claude Pageau Dec-2014
+
+
 import time
 import datetime
 import picamera
