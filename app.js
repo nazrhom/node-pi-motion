@@ -1,14 +1,26 @@
-var child_process = require('child_process');
+var spawn = require('child_process').spawn;
 
-child_process.exec('./pi-motion-lite.py', function(error, stdout, stderr) {
-  if (error) {
-    console.log(error);
-    process.exit(1);
-  }
-  if(stderr) {
-    console.log(stderr);
-  }
-  if (stdout) {
-    console.log(stdout)
-  }
+var child = spawn('python', [__dirname + '/deps/pi-motion-lite.py']);
+
+var chunk = '';
+
+child.stdout.setEncoding('utf8')
+
+child.stderr.on('data', function(data) {
+    chunk += data;
 });
+
+child.stdout.on('end', function(data) {
+  console.log(data)
+})
+
+child.stdout.on('close', function(data) {
+  console.log(chunk)
+})
+
+child.on('close', function(code) {
+    console.log('closing code: ' + code);
+});
+child.on('error', function (err) {
+  console.log('closing code: ' + err);
+})

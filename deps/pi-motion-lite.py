@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # Minimal Motion Detection Logic written by Claude Pageau Dec-2014
-
 import time
 import datetime
 import picamera
@@ -92,6 +91,7 @@ def Main():
     dayTime = True
     msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
     showMessage("Main",msgStr)
+    print ("Starting pi-motion-lite\n");
     stream1 = getStreamImage(dayTime)
     while True:
         stream2 = getStreamImage(dayTime)
@@ -109,5 +109,3 @@ if __name__ == '__main__':
         print("  Exiting Program")
         print("+++++++++++++++++++")
         print("")
-
-            
