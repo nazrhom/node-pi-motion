@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Minimal Motion Detection Logic written by Claude Pageau Dec-2014
+print "Starting pi-motion-lite\n";
 
 
 import time
@@ -90,6 +91,7 @@ def getStreamImage(daymode):
             return stream.array
 
 def Main():
+    print ("Starting pi-motion-lite\n");
     dayTime = True
     msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
     showMessage("Main",msgStr)
