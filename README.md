@@ -22,4 +22,4 @@ nodePiMotion.on('DetectedMotion', function() {
 ### OPTIONS
 
 - `verbose` - If true the pi-motion-lite script will output its debug info (default: `false`)
-- `throttle` - Set a value in ms to enable throttling on detection events. (default: `0`)
+- `throttle` - Set a value in ms to enable throttling on motion detection events. (default: `0`)
