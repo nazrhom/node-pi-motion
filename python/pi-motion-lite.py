@@ -6,13 +6,20 @@ import datetime
 import picamera
 import picamera.array
 from fractions import Fraction
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-t", "--threshold", type=int, help="How Much a pixel has to change (default: 10)", default=10)
+parser.add_argument("-s", "--sensitivity", type=int, help="How Many pixels need to change for motion detection (default: 200)", default=200)
+parser.add_argument("-n", "--night", help="Set this if the script is running during the night", action="store_true")
+args = parser.parse_args()
 
 #Constants
 SECONDS2MICRO = 1000000  # Constant for converting Shutter Speed in Seconds to Microseconds
 
 verbose = True     # Display showMessage if True
-threshold = 10     # How Much a pixel has to change
-sensitivity = 200  # How Many pixels need to change for motion detection
+threshold = args.threshold     # How Much a pixel has to change
+sensitivity = args.sensitivity  # How Many pixels need to change for motion detection
 nightShut = 5.5    # seconds Night shutter Exposure Time default = 5.5  Do not exceed 6 since camera may lock up
 nightISO = 800
 
@@ -93,7 +100,7 @@ def getStreamImage(daymode):
 
 def Main():
     print ("Starting pi-motion-lite\n");
-    dayTime = True
+    dayTime = not args.night
     msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
     showMessage("Main",msgStr)
     stream1 = getStreamImage(dayTime)
