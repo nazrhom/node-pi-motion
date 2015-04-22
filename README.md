@@ -1,8 +1,8 @@
 # node-pi-motion
 
-This module uses LINK PI MOTION to detect movement on a RaspberryPi.
+This module uses [pi-motion-lite](https://github.com/pageauc/pi-motion-lite) to detect movement on a RaspberryPi.
 
-## EXAMPLE USAGE
+### EXAMPLE USAGE
 
 ```
 var PiMotion = require('node-pi-motion');
@@ -19,7 +19,7 @@ nodePiMotion.on('DetectedMotion', function() {
 });
 ```
 
-## OPTIONS
+### OPTIONS
 
 - `verbose` - If true the pi-motion-lite script will output its debug info (default: `false`)
 - `throttle` - Set a value in ms to enable throttling on detection events. (default: `0`)
