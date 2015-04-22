@@ -1,7 +1,5 @@
 #!/usr/bin/python
 # Minimal Motion Detection Logic written by Claude Pageau Dec-2014
-print "Starting pi-motion-lite\n";
-
 
 import time
 import datetime
@@ -30,9 +28,12 @@ def userMotionCode():
     # Users can put code here that needs to be run prior to taking motion capture images
     # Eg Notify or activate something.
     # User code goes here
+    eventStr = "DetectedMotion"
 
-    msgStr = "Motion Found So Do Something ..."
-    showMessage("userMotionCode",msgStr)
+    print eventStr
+
+    # Show eventStr for debugging
+    showMessage("userMotionCode",eventStr)
     return
 
 def showTime():
@@ -95,7 +96,6 @@ def Main():
     dayTime = True
     msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
     showMessage("Main",msgStr)
-    print ("Starting pi-motion-lite\n");
     stream1 = getStreamImage(dayTime)
     while True:
         stream2 = getStreamImage(dayTime)

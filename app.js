@@ -1,41 +1,39 @@
-// var spawn = require('child_process').spawn;
-//
-// var child = spawn('python', [__dirname + '/deps/pi-motion-lite.py', '-u']);
-//
-// var chunk = '';
-//
-// child.stdout.setEncoding('utf8')
-//
-// child.stderr.on('data', function(data) {
-//   console.log('in data')
-//     chunk += data;
-// });
-//
-// child.stderr.on('close', function(data) {
-//   console.log('in close')
-//   console.log(data)
-// })
-// child.stdout.on('end', function(data) {
-//   console.log(data)
-// })
-//
-// child.stdout.on('close', function(data) {
-//   console.log('in close')
-//   console.log(chunk)
-// })
-
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 var PythonShell = require('python-shell');
+var _ = require('lodash');
+
+var DEBUG = 'node-pi-motion';
 
 var options = {
   mode: 'text',
-  pythonPath: 'usr/bin/python',
+  pythonPath: '/usr/bin/python',
   pythonOptions: ['-u'],
-  scriptPath: 'deps',
+  scriptPath: __dirname + '/python',
   args: []
 };
 
-var child = new PythonShell('pi-motion-lite.py')
+function NodePiMotion(opts) {
+  var self = this;
+  opts = opts || {};
 
-child.on('message', function (message) {
-  console.log(message)
-})
+  this.throttle = opts.throttle || 0;
+  
+  this.emitMessage = _.throttle(function() {
+    self.emit('DetectedMotion');
+  }, this.throttle);    
+   
+  EventEmitter.call(this);
+
+  this.pythonChild = new PythonShell('pi-motion-lite.py', options);
+
+  this.pythonChild.on('message', function (message) {   
+    if (opts.verbose) console.log(DEBUG, ' Recieved message: ', message);
+    if (message === 'DetectedMotion') {
+      self.emitMessage();
+    }
+  });
+}
+
+util.inherits(NodePiMotion, EventEmitter);
+module.exports = NodePiMotion;
