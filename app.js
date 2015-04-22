@@ -5,13 +5,6 @@ var _ = require('lodash');
 
 var DEBUG = 'node-pi-motion';
 
-var options = {
-  mode: 'text',
-  pythonPath: '/usr/bin/python',
-  pythonOptions: ['-u'],
-  scriptPath: __dirname + '/python',
-  args: []
-};
 
 function NodePiMotion(opts) {
   var self = this;
@@ -24,8 +17,18 @@ function NodePiMotion(opts) {
   }, this.throttle);    
    
   EventEmitter.call(this);
+  
+  var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night'));
 
-  this.pythonChild = new PythonShell('pi-motion-lite.py', options);
+  var pyOptions = {
+    mode: 'text',
+    pythonPath: '/usr/bin/python',
+    pythonOptions: ['-u'],
+    scriptPath: __dirname + '/python',
+    args: pythonArgs
+  };
+
+  this.pythonChild = new PythonShell('pi-motion-lite.py', pyOptions);
 
   this.pythonChild.on('message', function (message) {   
     if (opts.verbose) console.log(DEBUG, ' Recieved message: ', message);
@@ -35,5 +38,18 @@ function NodePiMotion(opts) {
   });
 }
 
+
+function buildPythonArgs(opts) {
+  var argMap = {
+    sensitivity: 's',
+    threshold: 't',
+    night: 'n'
+  };
+
+  return _.map(opts, function(value, key) {
+    if (value === true) return '-' + argMap[key];
+    else return '-' + argMap[key] + ' ' + value; 
+  });
+}
 util.inherits(NodePiMotion, EventEmitter);
 module.exports = NodePiMotion;
