@@ -1,13 +1,14 @@
 {
   "name": "node-pi-motion",
   "version": "1.0.0",
-  "description": "",
+  "private": "true",
+  "description": "This module wraps pi-motion-lite for nodejs",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node examples/example.js"
   },
-  "author": "",
+  "author": "Giovanni Garufi",
   "license": "ISC",
   "dependencies": {
     "ps-tree": "^1.0.0",
