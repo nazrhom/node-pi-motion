@@ -21,5 +21,12 @@ nodePiMotion.on('DetectedMotion', function() {
 
 ### OPTIONS
 
-- `verbose` - If true the pi-motion-lite script will output its debug info (default: `false`)
+#### General
+- `verbose` - If true the pi-motion-lite script will output its debug info. (default: `false`)
+- `pythonPath` - The path where python is installed on your machine (default: `/usr/bin/python`)
+
+#### Camera
 - `throttle` - Set a value in ms to enable throttling on motion detection events. (default: `0`)
+- `night` - If true the script will apply night modifiers to the camera. (default: `false`)
+- `sensitivity` - How Many pixels need to change for motion detection. (default: `200`)
+- `threshold` - How Much a pixel has to change. (default: `10`)
