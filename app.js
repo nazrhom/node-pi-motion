@@ -94,8 +94,12 @@ NodePiMotion.prototype.attachListeners = function () {
   self.pythonChild.on('close', function() {
     if (self.verbose) console.log(DEBUG, 'Python script has exited');
     if (self.autorestart) {
-      self.pythonChild = new PythonShell('pi-motion-lite.py', self.pyOptions);
-      self.attachListeners();
+
+      // Restart the script at a random timeframe in the next two seconds
+      setTimeout(function() {
+        self.pythonChild = new PythonShell('pi-motion-lite.py', self.pyOptions);
+        self.attachListeners();
+      }, Math.random() * 2000);
     }
   });
 }
