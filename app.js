@@ -9,14 +9,18 @@ function buildPythonArgs(opts) {
   var argMap = {
     sensitivity: 's',
     threshold: 't',
-    night: 'n',
-    verbose: 'v'
+    night: 'n'
   };
 
-  return _.map(opts, function(value, key) {
-    if (value === true) return '-' + argMap[key];
+  var buildArgs = _.map(opts, function(value, key) {
+    if (_.isBoolean(value)) {
+      if (value === true) return '-' + argMap[key];
+      else return;
+    }
     else return '-' + argMap[key] + ' ' + value;
   });
+
+  return _.compact(buildArgs);
 }
 
 function NodePiMotion(opts) {
@@ -31,7 +35,7 @@ function NodePiMotion(opts) {
 
   EventEmitter.call(this);
 
-  var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night', 'verbose'));
+  var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night'));
 
   var pyOptions = {
     mode: 'text',
@@ -44,6 +48,7 @@ function NodePiMotion(opts) {
   this.pythonChild = new PythonShell('pi-motion-lite.py', pyOptions);
 
   this.pythonChild.on('message', function (message) {
+    if (opts.verbose) console.log(DEBUG, message);
     if (message === 'DetectedMotion') {
       self.emitMessage();
     }
