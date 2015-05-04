@@ -46,12 +46,21 @@ function NodePiMotion(opts) {
   this.throttle = opts.throttle || 0;
   this.autorestart = opts.autorestart || false;
   this.verbose = opts.verbose || false;
+  this.debug = opts.debug || false;
 
   this.emitMessage = _.throttle(function() {
     self.emit('DetectedMotion');
   }, this.throttle);
 
   EventEmitter.call(this);
+
+  
+  if (this.debug) {
+    setInterval(function() {
+      self.emitMessage();
+    }, this.debug);
+    return
+  }
 
   var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night'));
 
@@ -94,7 +103,6 @@ NodePiMotion.prototype.attachListeners = function () {
   self.pythonChild.on('close', function() {
     if (self.verbose) console.log(DEBUG, 'Python script has exited');
     if (self.autorestart) {
-
       // Restart the script at a random timeframe in the next two seconds
       setTimeout(function() {
         self.pythonChild = new PythonShell('pi-motion-lite.py', self.pyOptions);
