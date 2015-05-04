@@ -54,7 +54,6 @@ function NodePiMotion(opts) {
 
   EventEmitter.call(this);
 
-  
   if (this.debug) {
     setInterval(function() {
       self.emitMessage();
