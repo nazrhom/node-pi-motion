@@ -48,9 +48,12 @@ function NodePiMotion(opts) {
   this.verbose = opts.verbose || false;
   this.debug = opts.debug || false;
 
+  /* Refer to https://github.com/lodash/lodash/issues/222 and
+     http://benalman.com/projects/jquery-throttle-debounce-plugin
+     for a discussion the trailing and leading options */
   this.emitMessage = _.throttle(function() {
     self.emit('DetectedMotion');
-  }, this.throttle);
+  }, this.throttle, {trailing: false});
 
   EventEmitter.call(this);
 
@@ -81,7 +84,7 @@ util.inherits(NodePiMotion, EventEmitter);
 NodePiMotion.prototype.attachListeners = function () {
   var self = this;
 
-  self.pythonChild.on('message', function (message) {
+  self.pythonChild.on('message', function(message) {
     if (message === 'DetectedMotion') {
       self.emitMessage();
     } else if (self.verbose) console.log(DEBUG, message);
@@ -99,14 +102,14 @@ NodePiMotion.prototype.attachListeners = function () {
     }
   });
 
-  self.pythonChild.on('close', function() {
+  self.pythonChild.on('close', function () {
     if (self.verbose) console.log(DEBUG, 'Python script has exited');
     if (self.autorestart) {
-      // Restart the script at a random timeframe in the next two seconds
+      // Restart the script at a random timeframe in the next five seconds
       setTimeout(function() {
         self.pythonChild = new PythonShell('pi-motion-lite.py', self.pyOptions);
         self.attachListeners();
-      }, Math.random() * 2000);
+      }, Math.random() * 5000);
     }
   });
 }
