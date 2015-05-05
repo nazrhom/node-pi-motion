@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--threshold", type=int, help="How Much a pixel has to change (default: 10)", default=10)
 parser.add_argument("-s", "--sensitivity", type=int, help="How Many pixels need to change for motion detection (default: 200)", default=200)
 parser.add_argument("-n", "--night", help="Set this if the script is running during the night", action="store_true")
-parser.add_argument("-c", "--color", help="Pixel differences are computed using one of the RGB values for that pixel (defaults: G)", type=parse_color)
+parser.add_argument("-c", "--color", help="Pixel differences are computed using one of the RGB values for that pixel (defaults: G)", type=parse_color, default='G')
 args = parser.parse_args()
 
 #Constants
@@ -30,9 +30,9 @@ SECONDS2MICRO = 1000000         # Constant for converting Shutter Speed in Secon
 verbose = True			        # Display showMessage if True
 threshold = args.threshold      # How Much a pixel has to change
 sensitivity = args.sensitivity  # How Many pixels need to change for motion detection
+pixColor = args.color           # red=0 green=1 blue=2
 nightShut = 5.5   	            # seconds Night shutter Exposure Time default = 5.5  Do not exceed 6 since camera may lock up
 nightISO = 800
-print args.color
 
 testWidth = 100
 testHeight = 75
@@ -68,7 +68,6 @@ def showMessage(functionName, messageStr):
 def checkForMotion(data1, data2):
     # Find motion between two data streams based on sensitivity and threshold
     motionDetected = False
-    pixColor = 1 # red=0 green=1 blue=2
     pixChanges = 0;
     for w in range(0, testWidth):
         for h in range(0, testHeight):
