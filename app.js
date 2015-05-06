@@ -9,8 +9,8 @@ var path = require('path');
 var DEBUG = 'node-pi-motion';
 
 var kill = function (pid, signal) {
-  // Follow default node behavior
-  signal = signal || 'SIGKILL';
+  // Follow default process.kill behavior
+  signal = signal || 'SIGTERM';
 
   psTree(pid, function(err, children) {
     var pids = [pid].concat(_.map(children, _.partialRight(_.pick, 'PID')));
@@ -43,30 +43,30 @@ function NodePiMotion(opts) {
   var self = this;
   opts = opts || {};
 
-  this.throttle = opts.throttle || 0;
-  this.autorestart = opts.autorestart || false;
-  this.verbose = opts.verbose || false;
-  this.debug = opts.debug || false;
+  self.throttle = opts.throttle || 0;
+  self.autorestart = opts.autorestart || false;
+  self.verbose = opts.verbose || false;
+  self.debug = opts.debug || false;
 
   /* Refer to https://github.com/lodash/lodash/issues/222 and
      http://benalman.com/projects/jquery-throttle-debounce-plugin
-     for a discussion the trailing and leading options */
-  this.emitMessage = _.throttle(function() {
+     for a discussion about the trailing and leading options */
+  self.detectedMotion = _.throttle(function() {
     self.emit('DetectedMotion');
-  }, this.throttle, {trailing: false});
+  }, self.throttle, {trailing: false});
 
-  EventEmitter.call(this);
+  EventEmitter.call(self);
 
-  if (this.debug) {
+  if (self.debug) {
     setInterval(function() {
-      self.emitMessage();
-    }, this.debug);
+      self.detectedMotion();
+    }, self.debug);
     return
   }
 
   var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night'));
 
-  this.pyOptions = {
+  self.pyOptions = {
     mode: 'text',
     pythonPath: opts.pythonPath || '/usr/bin/python',
     pythonOptions: ['-u'],
@@ -74,9 +74,9 @@ function NodePiMotion(opts) {
     args: pythonArgs
   };
 
-  this.pythonChild = new PythonShell('pi-motion-lite.py', this.pyOptions);
+  self.pythonChild = new PythonShell('pi-motion-lite.py', self.pyOptions);
 
-  this.attachListeners();
+  self.attachListeners();
 }
 
 util.inherits(NodePiMotion, EventEmitter);
@@ -85,9 +85,20 @@ NodePiMotion.prototype.attachListeners = function () {
   var self = this;
 
   self.pythonChild.on('message', function(message) {
+    var data;
+    var split = message.split('-');
+
+    message = split[0];
+    data = split[1];
+
     if (message === 'DetectedMotion') {
-      self.emitMessage();
-    } else if (self.verbose) console.log(DEBUG, message);
+      self.detectedMotion();
+    } else if (message === 'ready') {
+      // When the script emits ready it will also pass the number of seconds before the first check will occur
+      setTimeout(function() {
+        self.ready({sleep: data});
+      }, data * 1000);
+    } else if (self.verbose) console.log(DEBUG, split.join('-'));
 
   });
 
@@ -96,10 +107,11 @@ NodePiMotion.prototype.attachListeners = function () {
 
     // The error event is fired on non 0 exit or when writing to stderr so we want to make sure the
     // script has actually exited before eventually restarting it
-    if (!self.pythonChild.terminated) {
-      if (self.verbose) console.log(DEBUG, 'Killing python script...');
-      kill(self.pythonChild.pid, 'SIGTERM')
-    }
+    self.close();
+
+    console.log(self.pythonChild);
+
+    self.emit('error', err);
   });
 
   self.pythonChild.on('close', function () {
@@ -112,6 +124,19 @@ NodePiMotion.prototype.attachListeners = function () {
       }, Math.random() * 5000);
     }
   });
+}
+
+NodePiMotion.prototype.close = function () {
+  var self = this;
+  if (!self.pythonChild.terminated) {
+    if (self.verbose) console.log(DEBUG, 'Killing python script...');
+    self.pythonChild.end()
+    kill(self.pythonChild.childProcess.pid, 'SIGTERM');
+  }
+}
+
+NodePiMotion.prototype.ready = function () {
+  this.emit('ready');
 }
 
 module.exports = NodePiMotion;

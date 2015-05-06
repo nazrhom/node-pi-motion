@@ -2,12 +2,15 @@
 # Minimal Motion Detection Logic written by Claude Pageau Dec-2014
 
 import time
+import signal
+import sys
 import datetime
 import picamera
 import picamera.array
 from fractions import Fraction
 import argparse
 
+# This function is used to validate the color parameter
 def parse_color(string):
     colorMap = {'R': 0, 'G': 1, 'B': 2}
     if colorMap.has_key(string):
@@ -16,6 +19,12 @@ def parse_color(string):
         msg = "%r is not a valid value. Please insert one of R G B" % string
         raise argparse.ArgumentTypeError(msg)
 
+# Handle remote exit of script
+def exit_handler(signal, frame):
+    sys.exit(0)
+
+# Attach handler to signal
+signal.signal(signal.SIGTERM, exit_handler)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--threshold", type=int, help="How Much a pixel has to change (default: 10)", default=10)
@@ -31,6 +40,8 @@ verbose = True			        # Display showMessage if True
 threshold = args.threshold      # How Much a pixel has to change
 sensitivity = args.sensitivity  # How Many pixels need to change for motion detection
 pixColor = args.color           # red=0 green=1 blue=2
+sleep = 1                       # Time between photos comparisons (in seconds)
+
 nightShut = 5.5   	            # seconds Night shutter Exposure Time default = 5.5  Do not exceed 6 since camera may lock up
 nightISO = 800
 
@@ -88,7 +99,7 @@ def getStreamImage(daymode):
     # Capture an image stream to memory based on daymode
     isDay = daymode
     with picamera.PiCamera() as camera:
-        time.sleep(2)
+        time.sleep(1)
         camera.resolution = (testWidth, testHeight)
         with picamera.array.PiRGBArray(camera) as stream:
             if isDay:
@@ -115,11 +126,16 @@ def Main():
     msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
     showMessage("Main",msgStr)
     stream1 = getStreamImage(dayTime)
+
+    # Signal node that detection is starting
+    rdyStr = 'ready-%i' % sleep
+    print rdyStr
+
     while True:
         stream2 = getStreamImage(dayTime)
         if checkForMotion(stream1, stream2):
             userMotionCode()
-        stream2 = stream1
+        stream1 = stream2
     return
 
 if __name__ == '__main__':
