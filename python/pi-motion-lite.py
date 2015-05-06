@@ -123,8 +123,8 @@ def Main():
     greetingStr = "Starting pi-motion-lite"
     showMessage("Main", greetingStr);
     dayTime = not args.night
-    msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % ( dayTime, threshold, sensitivity)
-    showMessage("Main",msgStr)
+    msgStr = "Checking for Motion dayTime=%s threshold=%i sensitivity=%i" % (dayTime, threshold, sensitivity)
+    showMessage("Main", msgStr)
     stream1 = getStreamImage(dayTime)
 
     # Signal node that detection is starting
