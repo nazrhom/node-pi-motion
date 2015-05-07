@@ -25,7 +25,8 @@ var buildPythonArgs = function (opts) {
   var argMap = {
     sensitivity: 's',
     threshold: 't',
-    night: 'n'
+    night: 'n',
+    sleep: 'z'
   };
 
   var buildArgs = _.map(opts, function(value, key) {

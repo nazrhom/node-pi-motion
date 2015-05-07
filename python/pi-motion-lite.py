@@ -30,7 +30,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--threshold", type=int, help="How Much a pixel has to change (default: 10)", default=10)
 parser.add_argument("-s", "--sensitivity", type=int, help="How Many pixels need to change for motion detection (default: 200)", default=200)
 parser.add_argument("-n", "--night", help="Set this if the script is running during the night", action="store_true")
-parser.add_argument("-c", "--color", help="Pixel differences are computed using one of the RGB values for that pixel (defaults: G)", type=parse_color, default='G')
+parser.add_argument("-c", "--color", type=parse_color, help="Pixel differences are computed using one of the RGB values for that pixel (defaults: G)", default='G')
+parser.add_argument("-z", "--sleep", type=int, help="The time in seconds to wait between two photos (Defaults 1)", default=1)
 args = parser.parse_args()
 
 #Constants
@@ -40,7 +41,7 @@ verbose = True			        # Display showMessage if True
 threshold = args.threshold      # How Much a pixel has to change
 sensitivity = args.sensitivity  # How Many pixels need to change for motion detection
 pixColor = args.color           # red=0 green=1 blue=2
-sleep = 1                       # Time between photos comparisons (in seconds)
+sleep = args.sleep              # Time between photos comparisons (in seconds)
 
 nightShut = 5.5   	            # seconds Night shutter Exposure Time default = 5.5  Do not exceed 6 since camera may lock up
 nightISO = 800
