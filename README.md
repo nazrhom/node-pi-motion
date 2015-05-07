@@ -37,3 +37,4 @@ nodePiMotion.on('DetectedMotion', function() {
 - `night` - If true the script will apply night modifiers to the camera. (default: `false`)
 - `sensitivity` - How Many pixels need to change for motion detection. (default: `200`)
 - `threshold` - How Much a pixel has to change. (default: `10`)
+#### 
