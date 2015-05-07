@@ -1,6 +1,6 @@
 {
   "name": "node-pi-motion",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "This module wraps pi-motion-lite for nodejs",
   "main": "app.js",
   "scripts": {
