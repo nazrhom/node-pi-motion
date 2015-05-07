@@ -4,9 +4,9 @@ This module uses [pi-motion-lite](https://github.com/pageauc/pi-motion-lite) to 
 
 ### Installation
 To install type
-
-  npm install node-pi-motion
-
+```
+npm install node-pi-motion
+```
 ### EXAMPLE USAGE
 
 ```
