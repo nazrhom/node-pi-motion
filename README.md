@@ -31,6 +31,7 @@ nodePiMotion.on('DetectedMotion', function() {
 - `pythonPath` - The path where python is installed on your machine (default: `/usr/bin/python`)
 - `autorestart` - If true the pi-motion-lite script will automatically keep getting restarted on exit (default: `false`)
 - `debug` - Assign a value in ms and the `DetectedMotion` event will be automatically triggered with that interval. When in debug mode the node-motion-lite script is never actually ran (default: `false`)
+- `sleep` - Time between photos comparisons in seconds (default: `1`)
 
 #### Camera
 - `throttle` - Set a value in ms to enable throttling on motion detection events. (default: `0`)
