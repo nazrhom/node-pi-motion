@@ -2,6 +2,11 @@
 
 This module uses [pi-motion-lite](https://github.com/pageauc/pi-motion-lite) to detect movement on a RaspberryPi.
 
+### Installation
+To install type
+
+  npm install node-pi-motion
+
 ### EXAMPLE USAGE
 
 ```
