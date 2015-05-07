@@ -2,6 +2,11 @@
 
 This module uses [pi-motion-lite](https://github.com/pageauc/pi-motion-lite) to detect movement on a RaspberryPi.
 
+### Installation
+To install type
+```
+npm install node-pi-motion
+```
 ### EXAMPLE USAGE
 
 ```
@@ -32,3 +37,19 @@ nodePiMotion.on('DetectedMotion', function() {
 - `night` - If true the script will apply night modifiers to the camera. (default: `false`)
 - `sensitivity` - How Many pixels need to change for motion detection. (default: `200`)
 - `threshold` - How Much a pixel has to change. (default: `10`)
+
+### Usage
+Simply create a new nodePiMotion instance and start listening on events.
+
+Once you are done you can terminate the python script with
+```
+nodePiMotion.close();
+```
+
+### Events
+```
+nodePiMotion.on('ready', function(){})    // called when the script is ready and is starting to detect motion
+nodePiMotion.on('DetectedMotion', function(){})   // called when the script detects motion 
+nodePiMotion.on('error', function(err){})   // called when the script errors
+```
+

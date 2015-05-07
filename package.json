@@ -1,7 +1,6 @@
 {
   "name": "node-pi-motion",
-  "version": "1.0.0",
-  "private": "true",
+  "version": "1.0.1",
   "description": "This module wraps pi-motion-lite for nodejs",
   "main": "app.js",
   "scripts": {
@@ -10,6 +9,11 @@
   },
   "author": "Giovanni Garufi",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nazrhom/node-pi-motion.git"
+  },
+  "bugs": "https://github.com/nazrhom/node-pi-motion/issues",
   "dependencies": {
     "ps-tree": "^1.0.0",
     "python-shell": "0.0.3"

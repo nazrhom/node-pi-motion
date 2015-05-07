@@ -97,7 +97,7 @@ NodePiMotion.prototype.attachListeners = function () {
     } else if (message === 'ready') {
       // When the script emits ready it will also pass the number of seconds before the first check will occur
       setTimeout(function() {
-        self.ready({sleep: data});
+        self.ready();
       }, data * 1000);
     } else if (self.verbose) console.log(DEBUG, split.join('-'));
 
