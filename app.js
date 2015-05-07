@@ -30,6 +30,7 @@ var buildPythonArgs = function (opts) {
   };
 
   var buildArgs = _.map(opts, function(value, key) {
+    if (_.isUndefined(argMap[key])) return;
     if (_.isBoolean(value)) {
       if (value === true) return '-' + argMap[key];
       else return;
@@ -65,8 +66,8 @@ function NodePiMotion(opts) {
     return
   }
 
-  var pythonArgs = buildPythonArgs(_.pick(opts, 'threshold', 'sensitivity', 'night'));
-
+  var pythonArgs = buildPythonArgs(opts);
+  
   self.pyOptions = {
     mode: 'text',
     pythonPath: opts.pythonPath || '/usr/bin/python',
@@ -99,7 +100,8 @@ NodePiMotion.prototype.attachListeners = function () {
       setTimeout(function() {
         self.ready();
       }, data * 1000);
-    } else if (self.verbose) console.log(DEBUG, split.join('-'));
+    }
+    if (self.verbose) console.log(DEBUG, split.join('-'));
 
   });
 
