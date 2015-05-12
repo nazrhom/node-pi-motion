@@ -15,6 +15,7 @@
   },
   "bugs": "https://github.com/nazrhom/node-pi-motion/issues",
   "dependencies": {
+    "lodash": "^3.8.0",
     "ps-tree": "^1.0.0",
     "python-shell": "0.0.3"
   }
