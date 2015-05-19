@@ -31,7 +31,7 @@ parser.add_argument("-t", "--threshold", type=int, help="How Much a pixel has to
 parser.add_argument("-s", "--sensitivity", type=int, help="How Many pixels need to change for motion detection (default: 200)", default=200)
 parser.add_argument("-n", "--night", help="Set this if the script is running during the night", action="store_true")
 parser.add_argument("-c", "--color", type=parse_color, help="Pixel differences are computed using one of the RGB values for that pixel (defaults: G)", default='G')
-parser.add_argument("-z", "--sleep", type=int, help="The time in seconds to wait between two photos (Defaults 1)", default=1)
+parser.add_argument("-z", "--sleep", type=sleep, help="The time in seconds to wait between two photos (Defaults 1)", default=1)
 args = parser.parse_args()
 
 #Constants
@@ -100,7 +100,7 @@ def getStreamImage(daymode):
     # Capture an image stream to memory based on daymode
     isDay = daymode
     with picamera.PiCamera() as camera:
-        time.sleep(1)
+        time.sleep(sleep)
         camera.resolution = (testWidth, testHeight)
         with picamera.array.PiRGBArray(camera) as stream:
             if isDay:
