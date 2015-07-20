@@ -67,7 +67,7 @@ function NodePiMotion(opts) {
   }
 
   var pythonArgs = buildPythonArgs(opts);
-  
+
   self.pyOptions = {
     mode: 'text',
     pythonPath: opts.pythonPath || '/usr/bin/python',
@@ -112,7 +112,7 @@ NodePiMotion.prototype.attachListeners = function () {
     // script has actually exited before eventually restarting it
     self.close();
 
-    console.log(self.pythonChild);
+    if (self.verbose) console.log(self.pythonChild);
 
     self.emit('error', err);
   });
